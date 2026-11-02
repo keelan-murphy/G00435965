@@ -62,3 +62,14 @@ Depends(get_db)):
         )
     return db_user
 
+@app.delete (
+    "/api.loans/{loan_id}"
+    status_code=status.HTTP_203_NO_CONTENT)
+def delete_loan(loan_id:int,db:Session = Depends (get_db)):
+    db_loan = db.get(LoanDB, loan_id)
+    if db_loan is None : raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "loan not found",)
+    db.delete (db_loan)
+    db.commit()
+    return
+
+

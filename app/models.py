@@ -17,8 +17,6 @@ class UserDB(Base):
     nullable=False
     )
     loan_days: Mapped[int] = mapped_column(Integer)
-    student_id: Mapped[str] = mapped_column(
-    )
     equipment_id: Mapped[int] = mapped_column(
         primary_key=True, index=True
     )

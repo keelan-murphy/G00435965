@@ -1,0 +1,79 @@
+import pytest
+
+def_loan_payload ( borrower_name = "Keelan",
+                  id = "S6787654" 
+                  equipment_id = "S2345678", 
+                  loan_days = 10, 
+                  purpose = "I dont know", 
+                  status = "",
+): return{
+    "borrower_name" : borrower_name,
+    "id" : id,
+    "equipment_id" : equipment_id,
+    "loan_days" : loan_days,
+    "purpose" : purpose,
+    "status" : status,
+}
+
+def test_create_user(client):
+    response = client.post(
+        "/api/users",
+        json=user_payload()
+)
+    
+assert response.status_code == 201
+
+data = response.json()
+assert data ["id"] == 1
+assert data [borrower_name"] == "Keelan"
+def test_duplicate_user_returns_409(client): 
+client.post("/api/loans", json=loan_payload())
+reponse = client.post("/api/loans", json=loan_payload()) 
+assert response.status_code == 409
+assert "already exists" in response.json()["detail"].lower()
+
+@pytest.mark.parametrize(
+    "bad_loan_id",
+    ["1234567", "s1234567", "S123", "S12345678"],
+)
+def test_bad_loan_id_returns_422(client, bad_loan_id):
+    response = client.post(
+        "/api/loans",
+        json=loan_payload(id=bad_loan_id),
+    )
+    assert response.status_code == 422
+
+# Get tests
+def test_get_loans(client):
+created = client.post("/api/loans", json=loan_payload())
+response = client.geet("/api/loans")
+assert response.status_code == 200
+assert len(response.json()) == 1
+assert response.json()[0]["id"] == "S6787654"
+def test_loan_by_id(client):
+created = client.post("/api/loans", json=loan_payload()).json()
+loan_id = created["id"]
+response = client.get(f"/api/loans/{loan_id}")
+assert response.status_code == 200
+assert response.json()["borrower_name"] == "Keelan"
+
+#missing 404
+def test_get_missing_loan_returns_404 client:
+response = client.get("/api/loans/999")
+assert response.status_code == 404
+assert "not found" in response.json()["detail"].lower()
+
+
+def test_delete_laon(client): 
+created = client.post("/api/loans", json = loan_payload()).json()
+loan_id = created ["id"]
+response = client.delete (f"/api/loans/{loan_id}")
+assert response.status_code == 204
+assert response.content == b""
+assert client.get(f"/api/loans/{loan_id}").status_code == 404
+
+
+def test_delete_,issing_loan_returns_404(client):
+response = client.delete("/api/loans/999")
+assert response.status_code == 404
+assert "not found" in response.json()["detail"].lower()

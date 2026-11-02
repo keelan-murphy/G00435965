@@ -11,5 +11,5 @@ class UserCreate(BaseModel):
     loan_days : int = Field(gt=1, lt=14)
     id:UniqueIdStr
     purpose: purposeStr
-    #equipment_id
+    equipment_id: UniqueIdStr
 
