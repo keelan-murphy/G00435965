@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints, LoanCreate, LoanRead
 
 borrowerStr = Annotated [str, StringConstraints(min_length=2, max_length=60)]
 purposeStr = Annotated [str, StringConstraints(min_length=5, max_length=100)]

@@ -63,7 +63,7 @@ Depends(get_db)):
     return db_user
 
 @app.delete (
-    "/api.loans/{loan_id}"
+    "/api.loans/{loan_id}",
     status_code=status.HTTP_203_NO_CONTENT)
 def delete_loan(loan_id:int,db:Session = Depends (get_db)):
     db_loan = db.get(LoanDB, loan_id)
